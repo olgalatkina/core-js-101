@@ -32,9 +32,8 @@
  * @return {RegExp}
  */
 function getRegexForGuid() {
-  throw new Error('Not implemented');
+  return /^{[\dA-F]{8}-[\dA-F]{4}-[\dA-F]{4}-[\dA-F]{4}-[\dA-F]{12}}$/i;
 }
-
 
 /**
  * Returns the regexp that matches all the strings from first column
@@ -54,9 +53,8 @@ function getRegexForGuid() {
  *
  */
 function getRegexForPitSpot() {
-  throw new Error('Not implemented');
+  return /[is]/;
 }
-
 
 /**
  * Returns the password validator regex.
@@ -77,11 +75,20 @@ function getRegexForPitSpot() {
  *   'PASSw0rd'.match(validator)  => true
  *   'PASSW0RD'.match(validator)  => false
  *   'Pa55'.match(validator) => false
+ *
+ *    ^                 # start-of-string
+ *    (?=.*[0-9])       # a digit must occur at least once
+ *    (?=.*[a-z])       # a lower case letter must occur at least once
+ *    (?=.*[A-Z])       # an upper case letter must occur at least once
+ *    (?=.*[@#$%^&+=])  # a special character must occur at least once
+ *    (?=\S+$)          # no whitespace allowed in the entire string
+ *    .{8,}             # anything, at least eight places though
+ *    $                 # end-of-string
  */
-function getPasswordValidator(/* minLength */) {
-  throw new Error('Not implemented');
-}
 
+function getPasswordValidator(minLength) {
+  return new RegExp(`^(?=.*[A-Z])(?=.*[a-z])(?=.*[\\d])[A-Za-z0-9]{${minLength},}$`);
+}
 
 module.exports = {
   getRegexForGuid,
