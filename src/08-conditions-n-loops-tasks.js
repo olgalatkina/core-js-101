@@ -430,26 +430,25 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  if (str.length % 2 !== 0) return false;
+
+  const pairsOfBrackets = [['[', ']'], ['{', '}'], ['(', ')'], ['<', '>']];
+  const stack = [];
+
+  for (let i = 0; i < str.length; i += 1) {
+    const bracket = str[i];
+    if (stack.length > 0 && stack[stack.length - 1] === bracket) {
+      stack.pop();
+    } else {
+      const couple = pairsOfBrackets.find((pair) => pair[0] === bracket);
+      if (couple) stack.push(couple[1]);
+      else return false;
+    }
+  }
+
+  return stack.length === 0;
 }
-
-// if (str.length % 2 !== 0) return false;
-
-// const pairsOfBrackets = [['[', ']'], ['{', '}'], ['(', ')'], ['<', '>']];
-// const stack = [];
-
-// for (let i = 0; i < str.length; i += 1) {
-//   const bracket = str[i];
-//   if (stack.length > 0 && stack[stack.length - 1] === bracket) {
-//     stack.pop();
-//   } else {
-//   const pair = pairsOfBrackets.find((pair) => pair[0] === bracket);
-//   if (pair) stack.push(pair[1]);
-//   else return false;
-// }
-
-// return stack.length === 0;
 
 
 /**
@@ -472,9 +471,17 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  let rem = num;
+  const arr = [];
+
+  while (rem > 0) {
+    arr.push(rem % n);
+    rem = Math.floor(rem / n);
+  }
+  return +arr.reverse().join('');
 }
+// return num.toString(n);
 
 
 /**
@@ -489,8 +496,15 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  let result = pathes[0];
+  for (let i = 1; i < pathes.length; i += 1) {
+    for (let j = 0; j < result.length; j += 1) {
+      if (result[j] !== pathes[i][j]) result = result.substring(0, j);
+    }
+  }
+
+  return result.substring(0, result.lastIndexOf('/') + 1);
 }
 
 
@@ -512,8 +526,25 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const h1 = m1.length; // m1 height
+  const h2 = m2.length; // m2 height
+  const w1 = m1[0].length; // m1 width
+  const w2 = m2[0].length; // m2 width
+  if (w1 !== h2) {
+    throw new Error(`wrong args: w1=${w1}, h2=${h2}`);
+  }
+  const m = Array.from({ length: h1 }, () => Array.from({ length: w2 }));
+  for (let i = 0; i < h1; i += 1) {
+    for (let j = 0; j < w2; j += 1) {
+      let s = 0;
+      for (let k = 0; k < w1; k += 1) {
+        s += m1[i][k] * m2[k][j];
+      }
+      m[i][j] = s;
+    }
+  }
+  return m;
 }
 
 
@@ -547,8 +578,23 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const isСonjunction = (symbol) => {
+    if ((position[0][0] === symbol && position[0][1] === symbol && position[0][2] === symbol)
+      || (position[1][0] === symbol && position[1][1] === symbol && position[1][2] === symbol)
+      || (position[2][0] === symbol && position[2][1] === symbol && position[2][2] === symbol)
+      || (position[0][0] === symbol && position[1][0] === symbol && position[2][0] === symbol)
+      || (position[1][1] === symbol && position[0][1] === symbol && position[2][1] === symbol)
+      || (position[0][2] === symbol && position[1][2] === symbol && position[2][2] === symbol)
+      || (position[0][0] === symbol && position[1][1] === symbol && position[2][2] === symbol)
+      || (position[0][2] === symbol && position[1][1] === symbol && position[2][0] === symbol)) {
+      return true;
+    }
+    return false;
+  };
+  if (isСonjunction('X')) return 'X';
+  if (isСonjunction('0')) return '0';
+  return undefined;
 }
 
 
